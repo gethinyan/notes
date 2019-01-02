@@ -14,7 +14,7 @@ date: 2019-01-02 17:44:12
 
 > 启用备用机开启负载均衡，同步主服务器的代码、静态资源到备用机让备用机跑起来。
 
-## 从服务器
+# 从服务器
 
 1. 安装 `rsync`
 
@@ -75,7 +75,7 @@ $ rsync --daemon
 
 <!-- more -->
 
-## 主服务器
+# 主服务器
 
 1. 安装 `rsync`
 
@@ -146,7 +146,7 @@ $ /root/sersync/bin/sersync2 -r -d -o /root/sersync/conf/static.xml > /root/sers
 $ root/sersync/bin/sersync2 -r -o /root/sersync/conf/webroot_full.xml
 ```
 
-## 问题
+# 问题
 
 1. 因为线上有部分图片使用了百度对象存储提供的缩略服务，即在url后加上 `@w_*`，但是使用缩略服务有一个要求就是对象存储上必须有原图，当我们没有访问 `cdn` 没有回源的时候对象存储上是没有原图的，所以我们需要手动的访问一次，既然 `sersync` 可以监听文件的变化，能不能在我们上传了图片后用 `curl` 访问一次呢？
 
@@ -213,9 +213,11 @@ $ chmod +x /root/sersync/bin/curl.sh
 /root/sersync/bin/sersync2 -d -o /root/sersync/conf/static_upload.xml -m command
 ```
 
-2. 当开启负载均衡的时候，用户上传文件调用接口分发到了备用机时，文件只存在于备用机，因为不是双向同步，这时主服务器上没有该文件，所以访问该文件时负载均衡分发到主服务器会报404
+2. 当开启负载均衡的时候，用户上传文件调用接口分发到了备用机时，文件只存在于备用机，因为不是双向同步，这时主服务器上没有该文件，所以访问该文件时负载均衡分发到主服务器会报404，所以可以针对静态文件使用NFS实现网络文件系统，从而备用机访问到主服务器的今天文件
 
-  - `nfs` 工作流程
+# NFS
+
+1. `nfs` 工作流程
 
 ```bash
 1. 由程序在NFS客户端发起存取文件的请求，客户端本地的RPC(rpcbind)服务会通过网络向NFS服务端的RPC的111端口发出文件存取功能的请求。
@@ -224,7 +226,7 @@ $ chmod +x /root/sersync/bin/curl.sh
 4. 存取数据成功后，返回前端访问程序，完成一次存取操作。
 ```
 
-  - 主服务器安装 `nfs`
+2. 主服务器安装 `nfs`
 
 ```bash
 # 查看系统是否已安装nfs
@@ -234,13 +236,13 @@ $ rpm -qa | grep rpcbind
 $ yum install nfs-utils rpcbind -y
 ```
 
-  - 主服务器配置文件 `/etc/exports`
+3. 主服务器配置文件 `/etc/exports`
 
 ```
 /home/work/orp/static/upload 172.16.0.0/16(rw,no_root_squash,sync,no_subtree_check)
 ```
 
-  - 重要配置文件参数说明
+4. 重要配置文件参数说明
 
 ```bash
 ro：共享目录只读
@@ -261,14 +263,14 @@ subtree_check（默认） ：若输出目录是一个子目录，则nfs服务器
 no_subtree_check ：即使输出目录是一个子目录，nfs服务器也不检查其父目录的权限，这样可以提高效率
 ```
 
-  - 主服务器启动 `nfs`，`rpcbind` 服务
+5. 主服务器启动 `nfs`，`rpcbind` 服务
 
 ```bash
 $ service rpcbind start
 $ service nfs start
 ```
 
-  - 备用机安装 `nfs`
+6. 备用机安装 `nfs`
 
 ```bash
 # 查看系统是否已安装nfs
@@ -278,7 +280,7 @@ $ rpm -qa | grep rpcbind
 $ yum install nfs-utils rpcbind -y
 ```
 
-  - 备用机查看 `nfs` 共享目录
+7. 备用机查看 `nfs` 共享目录
 
 ```bash
 $ showmount -e 172.16.0.2
@@ -286,7 +288,7 @@ Export list for 172.16.0.2:
 /home/work/orp/static/upload 172.16.0.0/16
 ```
 
-  - 挂载`nfs`
+8. 挂载`nfs`
 
 ```bash
 mount 172.16.0.2:/home/work/orp/static/upload /home/work/orp/static/upload
