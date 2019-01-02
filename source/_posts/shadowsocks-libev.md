@@ -4,8 +4,6 @@ tags:
   - Shadowsocks
   - Shadowsocks-libev
   - CentOS
-category:
-  - Shadowsocks
 date: 2018-01-29 23:32:14
 ---
 
