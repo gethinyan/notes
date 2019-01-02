@@ -28,4 +28,4 @@ branches:
 
 env:
   global:
-    - GH_REF: github.com/gethinyan/blog.git
+    - GH_REF: github.com/gethinyan/gethinyan.github.io.git
