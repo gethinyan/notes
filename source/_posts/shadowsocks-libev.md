@@ -100,5 +100,5 @@ stdout_logfile = /home/work/orp/shadowsocks-libev/logs/ss.stdout.log
 4. 启动 Supervisor
 
 ```bash
-$ supervisord -c /home/work/orp/shadowsocks-libev/etc/supervisord.conf
+$ cd /home/work/orp/shadowsocks-libev/etc && supervisord -c /home/work/orp/shadowsocks-libev/etc/supervisord.conf
 ```
