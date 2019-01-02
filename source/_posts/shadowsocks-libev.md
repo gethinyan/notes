@@ -10,6 +10,7 @@ date: 2018-01-29 23:32:14
 ---
 
 
+
 # 安装 EPEL 源
 
 1. 什么是企业版 Linux 附加软件包（EPEL）？
@@ -37,22 +38,67 @@ $ yum update -y
 $ yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
 ```
 
-# 安装 Shadowsocks-libev
+# 安装并启动 Shadowsocks-libev
 
-> 第一次安装 Shadowsocks-libev 的时候是通过 yum 源安装的，不过现在找不到 Shadowsocks-libev 的 yum 源，暂时通过 github 下载源码并配置好 Shadowsocks-libev
+> 第一次安装 Shadowsocks-libev 的时候是通过 yum 源安装的，不过现在找不到 Shadowsocks-libev 的 yum 源，暂时通过 github 下载源码并启动 Shadowsocks-libev
+
+1. 安装 Shadowsocks-libev
 
 ```bash
 # 创建 work 用户并修改密码
-$ useradd work
-$ passwd work
-$ su work && cd ~
+$ useradd work -u 1000
+$ echo hicoffice | passwd --stdin work
+$ su work
+$ cd /home/work
 # 创建 source 文件夹用于存放源码
-$ mkdir source
+$ mkdir source && cd source
 # 从 github 上下载源码
-$ git clone https://github.com/shadowsocks/shadowsocks-libev.git
-$ cd shadowsocks-libev
+$ wget https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.2.3/shadowsocks-libev-3.2.3.tar.gz
+$ cd shadowsocks-libev-3.2.3
+# 开始。安装
+$ ./configure --prefix=/home/work/orp/shadowsocks-libev
+$ make && make install
+```
+
+2. 启动 Shadowsocks-libev
+
+```bash
 # 开启 Shadowsocks-libev，更多参数通过 ss-server --help 查看
-$ /home/work/source/shadowsocks-libev/bin/ss-server -s 0.0.0.0 -p port -k password -m method -u &
-# 也可以用 nohup 启动 Shadowsocks-libev
-$ nohup /home/gethin/local/shadowsocks-libev/bin/ss-server -c /home/gethin/local/shadowsocks-libev/etc/shadowsocks-libev.json < /dev/null >> /home/gethin/local/shadowsocks-libev/logs/shadowsocks-libev.log 2>&1 &
+$ /home/work/orp/shadowsocks-libev/bin/ss-server -s 0.0.0.0 -p 8388 -k password -m rc4-md5 &
+```
+
+# 使用 Supervisor 启动 Shadowsocks-libev
+
+1. 安装 Supervisor
+
+```bash
+$ pip install supervisor
+```
+
+2. 配置 Supervisor
+
+```bash
+$ cd /home/work/orp/shadowsocks-libev
+# 创建配置文件和日志存放目录
+$ mkdir etc logs
+$ vim /home/work/orp/shadowsocks-libev/etc/supervisord.conf
+```
+
+3. `/home/work/orp/shadowsocks-libev/etc/supervisord.conf`
+
+```bash
+[program:shadowsocks]
+command = /home/work/orp/shadowsocks-libev/bin/ss-server -s 0.0.0.0 -p 8388 -k password -m rc4-md5 > /dev/null 2>&1 &
+user = work
+autostart = true
+autoresart = true
+stderr_logfile = /home/work/orp/shadowsocks-libev/logs/ss.stderr.log
+stdout_logfile = /home/work/orp/shadowsocks-libev/logs/ss.stdout.log
+[supervisord]
+```
+
+4. 启动 Supervisor
+
+```bash
+$ supervisord -c /home/work/orp/shadowsocks-libev/etc/supervisord.conf
 ```
