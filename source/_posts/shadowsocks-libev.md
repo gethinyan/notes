@@ -65,6 +65,8 @@ $ make && make install
 $ /home/work/orp/shadowsocks-libev/bin/ss-server -s 0.0.0.0 -p 8388 -k password -m rc4-md5 &
 ```
 
+<!-- more -->
+
 # 使用 Supervisor 启动 Shadowsocks-libev
 
 1. 安装 Supervisor

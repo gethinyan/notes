@@ -73,6 +73,8 @@ $ chmod 600 /etc/rsync.pass
 $ rsync --daemon
 ```
 
+<!-- more -->
+
 ## 主服务器
 
 1. 安装 `rsync`
