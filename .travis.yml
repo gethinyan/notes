@@ -8,7 +8,9 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/id_rsa
 - ssh-add /tmp/id_rsa
-deploy:
-  provider: script
-  script: bash ./auto_deploy.sh
-  skip_cleanup: true
+# deploy:
+#   provider: script
+#   script: bash ./auto_deploy.sh
+#   skip_cleanup: true
+after_success:
+  - ssh root@47.52.175.26 "bash ./auto_deploy.sh"
