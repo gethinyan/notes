@@ -1,17 +1,5 @@
 language: node_js
 node_js: stable
-# addons:
-# ssh_known_hosts: 47.52.175.26
-# before_deploy:
-# - openssl aes-256-cbc -K $encrypted_99fb0ffd7f47_key -iv $encrypted_99fb0ffd7f47_iv
-#   -in id_rsa.enc -out /tmp/id_rsa -d
-# - eval "$(ssh-agent -s)"
-# - chmod 600 /tmp/id_rsa
-# - ssh-add /tmp/id_rsa
-# deploy:
-#   provider: script
-#   script: bash ./deploy.sh
-#   skip_cleanup: true
 cache:
   apt: true
   directories:
