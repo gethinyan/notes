@@ -316,6 +316,3 @@ mount 172.16.0.2:/home/work/orp/static/upload /home/work/orp/static/upload
 ### 注意事项
 
 使用 `docker` 的情况下在挂载之后对应的 `docker` 容器需要重启一次，否则读取不到数据
-
-
-> 未来的你一定会感谢现在努力的自己

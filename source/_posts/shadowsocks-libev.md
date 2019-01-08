@@ -101,5 +101,3 @@ stdout_logfile = /home/work/orp/shadowsocks-libev/logs/ss.stdout.log
 ```bash
 $ cd /home/work/orp/shadowsocks-libev/etc && supervisord -c /home/work/orp/shadowsocks-libev/etc/supervisord.conf
 ```
-
-> 未来的你一定会感谢现在努力的自己
