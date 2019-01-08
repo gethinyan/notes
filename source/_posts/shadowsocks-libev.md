@@ -1,5 +1,5 @@
 ---
-title: CentOS 安装 Shadowsocks-libev
+title: Shadowsocks-libev 安装笔记
 tags:
   - Shadowsocks
   - Shadowsocks-libev
@@ -8,40 +8,38 @@ date: 2018-01-29 23:32:14
 ---
 
 
-# `Shadowsocks-libev` 安装笔记
+# 安装 EPEL 源
 
-## 安装 EPEL 源
-
-### 什么是企业版 Linux 附加软件包（EPEL）
+# 什么是企业版 Linux 附加软件包（EPEL）
 - 企业版 Linux 附加软件包（以下简称 EPEL）是一个 Fedora 特别兴趣小组，用以创建、维护以及管理针对企业版 Linux 的一个高质量附加软件包集，面向的对象包括但不限于 红帽企业版 Linux (RHEL)、CentOS、Scientific Linux (SL)、Oracle Linux (OL)
 
 - EPEL 的软件包通常不会与企业版 Linux 官方源中的软件包发生冲突，或者互相替换文件。EPEL 项目与 Fedora 基本一致，包含完整的构建系统、升级管理器、镜像管理器等等
 
-### 通过 yum 命令安装 EPEL
+## 通过 yum 命令安装 EPEL
 
 ```bash
 $ yum install epel-release -y
 ```
 
-## 安装依赖
+# 安装依赖
 
-### 更新 CentOS 系统
+## 更新 CentOS 系统
 
 ```bash
 $ yum update -y
 ```
 
-### 安装 `Shadowsocks-libev` 依赖
+## 安装 `Shadowsocks-libev` 依赖
 
 ```bash
 $ yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
 ```
 
-## 安装并启动 `Shadowsocks-libev`
+# 安装并启动 `Shadowsocks-libev`
 
 > 注：第一次安装 `Shadowsocks-libev` 的时候是通过 yum 源安装的，不过现在找不到 `Shadowsocks-libev` 的 yum 源，暂时通过 github 下载源码并启动 `Shadowsocks-libev`
 
-### 安装 `Shadowsocks-libev`
+## 安装 `Shadowsocks-libev`
 
 ```bash
 # 创建 work 用户并修改密码
@@ -59,7 +57,7 @@ $ ./configure --prefix=/home/work/orp/shadowsocks-libev
 $ make && make install
 ```
 
-### 启动 Shadowsocks-libev
+## 启动 Shadowsocks-libev
 
 ```bash
 # 开启 Shadowsocks-libev，更多参数通过 ss-server --help 查看
@@ -68,15 +66,15 @@ $ /home/work/orp/shadowsocks-libev/bin/ss-server -s 0.0.0.0 -p 8388 -k password 
 
 <!-- more -->
 
-## 使用 `Supervisor` 启动 `Shadowsocks-libev`
+# 使用 `Supervisor` 启动 `Shadowsocks-libev`
 
-### 安装 `Supervisor`
+## 安装 `Supervisor`
 
 ```bash
 $ pip install supervisor
 ```
 
-### 配置 `Supervisor`
+## 配置 `Supervisor`
 
 ```bash
 $ cd /home/work/orp/shadowsocks-libev
@@ -98,10 +96,10 @@ stdout_logfile = /home/work/orp/shadowsocks-libev/logs/ss.stdout.log
 [supervisord]
 ```
 
-### 启动 `Supervisor`
+## 启动 `Supervisor`
 
 ```bash
 $ cd /home/work/orp/shadowsocks-libev/etc && supervisord -c /home/work/orp/shadowsocks-libev/etc/supervisord.conf
 ```
 
-> Enjoy it.
+> 未来的你一定会感谢现在努力的自己

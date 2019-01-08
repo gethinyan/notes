@@ -1,5 +1,5 @@
 ---
-title: rsync 实现文件同步
+title: rsync & sersync 实现文件同步
 tags:
   - rsync
   - sersync
@@ -9,15 +9,13 @@ date: 2019-01-02 17:44:12
 ---
 
 
-# `rsync & sersync` 同步文件
-
-## 背景
+# 背景
 
 由于一台主服务器压力比较大，需要启用备用机开启负载均衡减轻主服务器的压力，同步主服务器的代码、静态资源到从服务器让从服务器跑起来
 
-## 从服务器
+# 从服务器
 
-### 安装 `rsync`
+## 安装 `rsync`
 
 ```bash
 # 查看是否安装rsync
@@ -26,7 +24,7 @@ $ rpm -qa | grep rsync
 $ yum install rsync -y
 ```
 
-### 配置文件 `/etc/rsyncd.conf`
+## 配置文件 `/etc/rsyncd.conf`
 
 > 可以配置 `hosts allow` 只接受允许的 `ip` 的同步请求
 
@@ -61,7 +59,7 @@ comment = static
 path = /home/work/orp/static
 ```
 
-### 密码文件
+## 密码文件
 
 ```bash
 $ echo test:test > /etc/rsync.pass
@@ -69,7 +67,7 @@ $ echo test:test > /etc/rsync.pass
 $ chmod 600 /etc/rsync.pass
 ```
 
-### 运行 `rsync`
+## 运行 `rsync`
 
 ```bash
 # 因为rsync默认监听的是873端口，需要用root权限运行
@@ -78,9 +76,9 @@ $ rsync --daemon
 
 <!-- more -->
 
-## 主服务器
+# 主服务器
 
-### 安装 `rsync`
+## 安装 `rsync`
 
 ```bash
 # 查看是否安装rsync
@@ -89,7 +87,7 @@ $ rpm -qa | grep rsync
 $ yum install rsync -y
 ```
 
-### 解压 `sersync`
+## 解压 `sersync`
 
 ```bash
 # 为了方便，已经下好了sersync的安装包，只需解压并移到自己想要的地方即可
@@ -98,7 +96,7 @@ $ mv GNU-Linux-x86 sersync
 $ rm sersync2.5.4_64bit_binary_stable_final.tar.gz
 ```
 
-### 配置 `sersync`
+## 配置 `sersync`
 
 ```bash
 # 创建不同的目录区分文件类型，然后创建一个密码文件内容为从服务器的rsync密码，每个模块的xml文件已经写好只需要拷贝到conf文件夹即可
@@ -109,9 +107,9 @@ $ echo 'test' > etc/user.pass
 $ chmod 600 etc/user.pass
 ```
 
-### 配置文件 `*.xml`
+## 配置文件 `*.xml`
 
-#### 文件夹过滤
+### 文件夹过滤
 
 可以设置过滤文件夹(文件)，设置了之后就不会同步该文件夹(文件)，需要注意的是在设置了过滤后启动 `sersync` 时 `-r` 参数会失效
 
@@ -121,7 +119,7 @@ $ chmod 600 etc/user.pass
 </filter>s
 ```
 
-#### 设置监听目录和目标 `ip & module_name`
+### 设置监听目录和目标 `ip & module_name`
 
 可以修改监听的本地目录及远程的 `ip` 和 `module_name`，如果需要同步到多台从服务器，配置多个 `remote` 即可，还支持过滤，但是在设置了过滤后启动 `sersync` 时 `-r` 参数会失效
 
@@ -131,7 +129,7 @@ $ chmod 600 etc/user.pass
 </localpath>
 ```
 
-#### 失败重传
+### 失败重传
 
 可以修改失败重传的时间间隔，根据实际需求修改 `timeToExecute` 属性
 
@@ -139,7 +137,7 @@ $ chmod 600 etc/user.pass
 <failLog path="/tmp/rsync_fail_log.sh" timeToExecute="60"/><!-- default every 60mins execute once -->
 ```
 
-### 运行 `sersync`
+## 运行 `sersync`
 
 ```bash
 # webroot模块
@@ -148,7 +146,7 @@ $ /root/sersync/bin/sersync2 -r -d -o /root/sersync/conf/webroot.xml > /root/ser
 $ /root/sersync/bin/sersync2 -r -d -o /root/sersync/conf/static.xml > /root/sersync/logs/static.log 2>&1 &
 ```
 
-### 设置过滤需要初始化同步一次
+## 设置过滤需要初始化同步一次
 
 由于运行 `sersync` 时每个 `webroot` 模块都有指定 `filter` 过滤条件，虽然加上了 `-r` 参数，但是并不会进行第一次同步，所以需要我们针对每个模块手动的运行一次 `sersync` 命令同步一次
 
@@ -157,15 +155,15 @@ $ /root/sersync/bin/sersync2 -r -d -o /root/sersync/conf/static.xml > /root/sers
 $ root/sersync/bin/sersync2 -r -o /root/sersync/conf/webroot_full.xml
 ```
 
-## `cdn` 回源问题
+# `cdn` 回源问题
 
-### 问题描述
+## 问题描述
 
 因为线上有部分图片使用了百度对象存储提供的缩略服务，即在url后加上 `@w_*`，但是使用缩略服务有一个要求就是对象存储上必须有原图，当我们没有访问 `cdn` 没有回源的时候对象存储上是没有原图的，所以我们需要先手动的访问一次
 
-### 解决方案
+## 解决方案
 
-#### `sersync` 开启 `command` 插件
+### `sersync` 开启 `command` 插件
 
 ```xml
 <sersync>
@@ -176,7 +174,7 @@ $ root/sersync/bin/sersync2 -r -o /root/sersync/conf/webroot_full.xml
 </plugin>
 ```
 
-#### `curl.sh`
+### `curl.sh`
 
 ```bash
 #!/bin/bash
@@ -201,15 +199,15 @@ if [ $sign = 1 ]; then
 fi;
 ```
 
-#### `curl.sh` 加上可执行的权限
+### `curl.sh` 加上可执行的权限
 
 ```bash
 $ chmod +x /root/sersync/bin/curl.sh
 ```
 
-#### 开启 `command` 插件监听 `upload` 目录
+### 开启 `command` 插件监听 `upload` 目录
 
- - 配置文件 `static_upload.xml`
+#### 配置文件 `static_upload.xml`
 
 ```xml
 <sersync>
@@ -226,28 +224,28 @@ $ chmod +x /root/sersync/bin/curl.sh
 </plugin>
 ```
 
- - 启动 `command` 插件
+#### 启动 `command` 插件
 
 ```bash
 /root/sersync/bin/sersync2 -d -o /root/sersync/conf/static_upload.xml -m command
 ```
 
-## 从服务器上传文件主服务器无法读取问题
+# 从服务器上传文件主服务器无法读取问题
 
-### 问题描述
+## 问题描述
 
 当开启负载均衡的时候，用户上传文件调用接口分发到了备用机时，文件只存在于备用机，因为不是双向同步，这时主服务器上没有该文件，所以访问该文件时负载均衡分发到主服务器会报404，所以可以针对静态文件使用NFS实现网络文件系统，从而备用机访问到主服务器的今天文件
 
-### 解决方案 `nfs`
+## 解决方案 `nfs`
 
-#### `nfs` 工作流程
+### `nfs` 工作流程
 
  - 由程序在nfs客户端发起存取文件的请求，客户端本地的rpc(rpcbind)服务会通过网络向nfs服务端的rpc的111端口发出文件存取功能的请求
  - nfs服务端的rpc找到对应已注册的nfs端口，通知客户端rpc服务
  - 客户端获取正确的端口，并与nfs daemon联机存取数据
  - 存取数据成功后，返回前端访问程序，完成一次存取操作
 
-#### 主服务器安装 `nfs`
+### 主服务器安装 `nfs`
 
 ```bash
 # 查看系统是否已安装nfs
@@ -257,13 +255,13 @@ $ rpm -qa | grep rpcbind
 $ yum install nfs-utils rpcbind -y
 ```
 
-#### 主服务器配置文件 `/etc/exports`
+### 主服务器配置文件 `/etc/exports`
 
 ```
 /home/work/orp/static/upload 172.16.0.0/16(rw,no_root_squash,sync,no_subtree_check)
 ```
 
-#### 重要配置文件参数说明
+### 重要配置文件参数说明
 
 ```bash
 ro：共享目录只读
@@ -284,14 +282,14 @@ subtree_check（默认） ：若输出目录是一个子目录，则nfs服务器
 no_subtree_check ：即使输出目录是一个子目录，nfs服务器也不检查其父目录的权限，这样可以提高效率
 ```
 
-#### 主服务器启动 `nfs`，`rpcbind` 服务
+### 主服务器启动 `nfs`，`rpcbind` 服务
 
 ```bash
 $ service rpcbind start
 $ service nfs start
 ```
 
-#### 备用机安装 `nfs`
+### 备用机安装 `nfs`
 
 ```bash
 # 查看系统是否已安装nfs
@@ -301,7 +299,7 @@ $ rpm -qa | grep rpcbind
 $ yum install nfs-utils rpcbind -y
 ```
 
-#### 备用机查看 `nfs` 共享目录
+### 备用机查看 `nfs` 共享目录
 
 ```bash
 $ showmount -e 172.16.0.2
@@ -309,12 +307,15 @@ Export list for 172.16.0.2:
 /home/work/orp/static/upload 172.16.0.0/16
 ```
 
-#### 挂载`nfs`
+### 挂载`nfs`
 
 ```bash
 mount 172.16.0.2:/home/work/orp/static/upload /home/work/orp/static/upload
 ```
 
-#### 注意事项
+### 注意事项
 
 使用 `docker` 的情况下在挂载之后对应的 `docker` 容器需要重启一次，否则读取不到数据
+
+
+> 未来的你一定会感谢现在努力的自己
