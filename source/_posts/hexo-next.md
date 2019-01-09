@@ -193,7 +193,9 @@ handler.on('push', event => {
 ### 启动服务
 
 ```bash
-$ yarn global add pm2
+# 进入到 webhook.js 的目录运行下面命令
+$ npm install github-webhook-handler
+$ npm install pm2 -g
 $ pm2 start webhook.js
 $ pm2 startup
 ```
