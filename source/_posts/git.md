@@ -1,5 +1,5 @@
 ---
-title: git 笔记
+title: 和我一起走近 git
 tags:
   - git
   - GitHub
