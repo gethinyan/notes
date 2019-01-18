@@ -45,6 +45,8 @@ git config --global core.safecrlf false
 git config --global core.safecrlf warn
 ```
 
+<!-- more -->
+
 # 别名
 
 添加下列内容到你的 `$HOME` 目录的 `.gitconfig` 文件中
