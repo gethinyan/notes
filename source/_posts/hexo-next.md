@@ -9,20 +9,20 @@ tags:
   - deploy
 ---
 
-
 # Hexo
 
 ## 什么是 Hexo？
 
- - Hexo 是一个快速、简洁且高效的博客框架
+- Hexo 是一个快速、简洁且高效的博客框架
 
- - Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页
+- Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页
 
 ## 安装 Hexo
 
 ### 安装前请确保已经安装以下环境
- - Node.js
- - git
+
+- Node.js
+- git
 
 ### 安装 Hexo 命令
 
@@ -107,9 +107,9 @@ hexo d -g
 
 ### 设置 Environment Variables
 
- - 打开 settings 页面
- - 添加 Environment Variables
- - 添加变量 GITHUB_TOKEN，值在 [https://github.com/settings/tokens](https://github.com/settings/tokens) 生成即可
+- 打开 settings 页面
+- 添加 Environment Variables
+- 添加变量 GITHUB_TOKEN，值在 [https://github.com/settings/tokens](https://github.com/settings/tokens) 生成即可
 
 ### 在 Hexo 项目根目录添加文件 `.travis.yml`
 

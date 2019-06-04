@@ -7,10 +7,10 @@ tags:
 date: 2018-01-29 23:32:14
 ---
 
-
 # 安装 EPEL 源
 
 # 什么是企业版 Linux 附加软件包（EPEL）
+
 - 企业版 Linux 附加软件包（以下简称 EPEL）是一个 Fedora 特别兴趣小组，用以创建、维护以及管理针对企业版 Linux 的一个高质量附加软件包集，面向的对象包括但不限于 红帽企业版 Linux (RHEL)、CentOS、Scientific Linux (SL)、Oracle Linux (OL)
 
 - EPEL 的软件包通常不会与企业版 Linux 官方源中的软件包发生冲突，或者互相替换文件。EPEL 项目与 Fedora 基本一致，包含完整的构建系统、升级管理器、镜像管理器等等

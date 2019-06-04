@@ -6,7 +6,6 @@ tags:
 date: 2019-01-18 16:07:57
 ---
 
-
 # `git` 设置
 
 ```bash
@@ -64,7 +63,7 @@ git config --global core.safecrlf warn
 
 # GitHub SSH Keys
 
-使用SSH协议，您可以连接和验证远程服务器和服务。 使用SSH密钥，您可以连接到GitHub，而无需在每次访问时提供用户名或密码
+使用 SSH 协议，您可以连接和验证远程服务器和服务。 使用 SSH 密钥，您可以连接到 GitHub，而无需在每次访问时提供用户名或密码
 
 ## `ssh-keygen` 生成秘钥
 
@@ -94,10 +93,10 @@ Connection to github.com closed.
 
 # `git` 基础概念
 
- - `workspace` （工作区）
- - `stage` （暂存区）
- - `repository` （本地仓库）
- - `remote` （远程仓库）
+- `workspace` （工作区）
+- `stage` （暂存区）
+- `repository` （本地仓库）
+- `remote` （远程仓库）
 
 # `git` 基本命令
 
@@ -223,7 +222,6 @@ $ git pull remote branch [local branch]
 ```bash
 $ git push remote branch
 ```
-
 
 ## 管理主机名
 
